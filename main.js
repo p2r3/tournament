@@ -110,7 +110,7 @@ function loadCache() {
           };
         }
         // Last line sets leaderboard mode (either SOLO or COOP)
-        if (currBoard[currBoard.length - 1] == "COOP") cache.boards[boards[i]].coop = true;
+        if (currBoard[currBoard.length - 1] === "COOP") cache.boards[boards[i]].coop = true;
         else cache.boards[boards[i]].coop = false;
       });
     }
@@ -150,7 +150,7 @@ function loadCache() {
           }
           // Last line sets leaderboard mode (either SOLO or COOP)
           // Most likely not set for earlier weeks. Defaults to SOLO.
-          if (currBoard[currBoard.length - 1] == "COOP") cache.archive.boards[week][boards[i]].coop = true;
+          if (currBoard[currBoard.length - 1] === "COOP") cache.archive.boards[week][boards[i]].coop = true;
           else cache.archive.boards[week][boards[i]].coop = false;
         });
       }
@@ -221,7 +221,7 @@ function saveVideo(message, cat, link) {
 function removeRun(message, cat, player) {
 
   for (let i = 0; i < cache.boards[cat].length; i++) {
-    if (cache.boards[cat][i].id == player.id) {
+    if (cache.boards[cat][i].id === player.id) {
       cache.boards[cat].splice(i, 1);
       saveBoard(message, cat);
       replyToCommand(message, "Run has been removed!");
@@ -235,7 +235,7 @@ function removeRun(message, cat, player) {
 function editRun(message, cat, player, note) {
 
   for (let i = 0; i < cache.boards[cat].length; i++) {
-    if (cache.boards[cat][i].id == player.id) {
+    if (cache.boards[cat][i].id === player.id) {
       cache.boards[cat][i].note = note;
       saveBoard(message, cat);
       replyToCommand(message, "Run has been updated!");
@@ -256,7 +256,7 @@ function saveNick(message) {
       // Updates the name in every board and saves it
       for (const curr in cache.boards) {
         for (let i = 0; i < cache.boards[curr].length; i++) {
-          if (cache.boards[curr][i].id == message.author.id) {
+          if (cache.boards[curr][i].id === message.author.id) {
             cache.boards[curr][i].name = cache.nicks[message.author.id];
             break;
           }
@@ -305,7 +305,7 @@ function removeBoard(message, cat) {
 // A bunch of small functions for handling specific common tasks
 function replyToCommand(message, reply) {
 
-  if (!message.guild || message.channel.id == config.channel) return message.lineReplyNoMention(reply);
+  if (!message.guild || message.channel.id === config.channel) return message.lineReplyNoMention(reply);
   return client.channels.cache.get(config.channel).send(`<@${message.author}> ${reply}`);
 
 }
@@ -328,7 +328,7 @@ function getRunLink(run, cat) {
 
   for (let i = cache.videos.length - 1; i >= 0; i--) {
     const vid = cache.videos[i];
-    if (run.name == vid.name && cat == vid.cat) return vid.link;
+    if (run.name === vid.name && cat === vid.cat) return vid.link;
   }
 
 }
@@ -394,7 +394,7 @@ function submitTime(message, runData) {
 
   // Removes the player from the board if they're already on it
   for (let i = 0; i < curr.length; i++) {
-    if (curr[i].id == message.author.id) {
+    if (curr[i].id === message.author.id) {
       cache.boards[cat].splice(i, 1);
       break;
     }
@@ -402,7 +402,7 @@ function submitTime(message, runData) {
   // Removes their partner if it's co-op and they are on the board
   if (cache.boards[cat].coop) {
     for (let i = 0; i < curr.length; i++) {
-      if (curr[i].id == cache.partner[cat][message.author.id].id) {
+      if (curr[i].id === cache.partner[cat][message.author.id].id) {
         cache.boards[cat].splice(i, 1);
         break;
       }
@@ -413,10 +413,10 @@ function submitTime(message, runData) {
   for (let i = 0; i < curr.length; i++) {
     let currLp = parseInt(curr[i].note, 10);
     if (
-      ((cat == "lp" || cat == "lp-solo") && // Category is LP:
+      ((cat === "lp" || cat === "lp-solo") && // Category is LP:
         lp < currLp || // Less portals or...
-        (lp == currLp && time < curr[i].time)) || // Same portals, faster time.
-      ((cat != "lp" && cat != "lp-solo") && // Category isn't LP:
+        (lp === currLp && time < curr[i].time)) || // Same portals, faster time.
+      ((cat !== "lp" && cat !== "lp-solo") && // Category isn't LP:
         time < curr[i].time) // Faster time
     ) {
       placement = i;
@@ -449,7 +449,7 @@ function verifyDemo(message, runData) {
 
         // Checks if the map name in the demo header maches the one in config
         var mapString = data.substring(536, 796).split("\x00")[0];
-        if (mapString != config.map.file) {
+        if (mapString !== config.map.file) {
           replyToCommand(message, "Demo is not from this week's map!\nThis will be reported to the organizers.");
           for (const adminId in config.admin) {
             try {
@@ -471,7 +471,7 @@ function verifyDemo(message, runData) {
         for (var i = 0; i < 4; i++) ticks += ticksString.charCodeAt(i) * Math.pow(2, i * 8);
 
         // Checks if the submited time is accurate (allowing up to +5 ticks)
-        if (ticks == 0) {
+        if (ticks === 0) {
           replyToCommand(message, "The demo header is corrupted, please make sure you followed all instructions.");
           // Until I bother to implement a proper way to do this, I'll keep it commented out.
         /*
@@ -499,7 +499,7 @@ async function verifyVideo(message, runData) {
 
   try {
     var linksplit = message.content.split("youtube.com/watch?v=");
-    if (linksplit.length == 1) linksplit = message.content.split("youtu.be/");
+    if (linksplit.length === 1) linksplit = message.content.split("youtu.be/");
     var videoid = linksplit[1].slice(0, 11);
   } catch (e) {
     replyToCommand(message, "Failed to verify the video! Make sure you copied the link correctly.");
@@ -561,7 +561,7 @@ function downloadRuns(message, msg, youtube) {
           const request = https.get(link, function(response) {
             response.pipe(file);
             response.on("end", () => {
-              if (++downloaded == expected) sendRuns(dlmsg, ytvids);
+              if (++downloaded === expected) sendRuns(dlmsg, ytvids);
               dlmsg.edit(`Downloading (${Math.round(downloaded/expected*100)}%)`);
             });
           });
@@ -572,11 +572,11 @@ function downloadRuns(message, msg, youtube) {
             const vidfile = fs.createWriteStream(filename + "-vid.mp4");
             const audfile = fs.createWriteStream(filename + "-aud.mp4");
             let video = ytdl(link, { quality: "highestvideo", dlChunkSize: "5MB" }).on("end", () => {
-              if (++downloaded == expected) sendRuns(dlmsg, ytvids);
+              if (++downloaded === expected) sendRuns(dlmsg, ytvids);
               dlmsg.edit(`Downloading (${Math.round(downloaded/expected*100)}%)`);
             }).pipe(vidfile);
             let audio = ytdl(link, { quality: "highestaudio", dlChunkSize: "5MB" }).on("end", () => {
-              if (++downloaded == expected) sendRuns(dlmsg, ytvids);
+              if (++downloaded === expected) sendRuns(dlmsg, ytvids);
               dlmsg.edit(`Downloading (${Math.round(downloaded/expected*100)}%)`);
             }).pipe(audfile);
           } else {
@@ -617,7 +617,7 @@ function sendRuns(message, ytvids) {
     for (let i = 0; i < expected; i++) {
       const ffmpeg = exec(`ffmpeg -i ${ytvids[i]}-vid.mp4 -i ${ytvids[i]}-aud.mp4 -c copy -map 0:v:0 -map 1:a:0 ${ytvids[i]}.mp4`);
       ffmpeg.on("close", () => {
-        if (++combined == expected) {
+        if (++combined === expected) {
           message.edit("Cleaning up...");
           for (let j = 0; j < expected; j++) {
             fs.unlinkSync(ytvids[j] + "-vid.mp4");
@@ -705,7 +705,7 @@ function exportRuns(message) {
   for (let i = 0; i < order.length; i++) {
     let found = false;
     for (const curr in cache.boards) {
-      if (curr == order[i]) {
+      if (curr === order[i]) {
         found = true;
         break;
       }
@@ -719,7 +719,7 @@ function exportRuns(message) {
   for (const curr in cache.boards) {
     let found = false;
     for (let i = 0; i < order.length; i++) {
-      if (order[i] == curr) {
+      if (order[i] === curr) {
         found = true;
         break;
       }
@@ -751,7 +751,7 @@ function exportRuns(message) {
     }
     let variation = Math.round((slowest - fastest) / 1000) + " second difference";
     // If needed, calculates portal variation
-    if (order[i] == "lp" || order[i] == "lp-solo") {
+    if (order[i] === "lp" || order[i] === "lp-solo") {
       let lp = curr[0].note.split(" ")[0],
         mp = curr[curr.length - 1].note.split(" ")[0];
       variation += "<br>" + (mp - lp) + " portal difference";
@@ -766,7 +766,7 @@ function exportRuns(message) {
       videos = [];
     for (let j = 0; j < curr.length; j++) {
       players[j] = curr[j].name;
-      if (order[i] != "lp" && order[i] != "lp-solo") times[j] = millisToString(curr[j].time);
+      if (order[i] !== "lp" && order[i] !== "lp-solo") times[j] = millisToString(curr[j].time);
       else times[j] = millisToString(curr[j].time) + "<br>portals: " + curr[j].note.split(" ")[0];
       notes[j] = curr[j].note;
       videos[j] = `${curr[j].name.replace(/ /g, "_")}-${order[i]}-${millisToString(curr[j].time).replace(/\./g, "_").replace(/\:/g, "_")}.dem.mp4`;
@@ -839,7 +839,7 @@ function displayLeaderboard(message, msg) {
       var charSum = 0;
       for (let i = 0; i < cat.length; i++) charSum += cat.charCodeAt(i);
       for (let i = 0; i < curr.length; i++) charSum -= curr.charCodeAt(i);
-      if (Math.abs(charSum) == 1) {
+      if (Math.abs(charSum) === 1) {
         replyToCommand(message, "Did you mean `!LB get " + curr + "`?");
         return;
       }
@@ -879,7 +879,7 @@ function displayLeaderboard(message, msg) {
   for (let i = 0; i < runs.length; i++) {
 
     // Tied runs just decrement an offset used for displaying the placement.
-    if (i > 0 && runs[i].time == runs[i - 1].time) offset--;
+    if (i > 0 && runs[i].time === runs[i - 1].time) offset--;
 
     // On a co-op leaderboard, the comment includes the partner's username.
     if (runs.coop) {
@@ -932,7 +932,7 @@ function displayArchive(message, msg) {
   try {
     var week = Number(msg.split(" ")[2]);
     var cat = msg.split(" ")[3];
-    if (msg.split(" ")[4] == "links") var links = true;
+    if (msg.split(" ")[4] === "links") var links = true;
     else var links = false;
     if (isNaN(week)) throw 0;
     if (typeof cat != "undefined") cat = cat.toLowerCase();
@@ -942,9 +942,9 @@ function displayArchive(message, msg) {
   }
 
   // Checks if the user is stupid and specifies this week
-  if (week == currWeek()) {
+  if (week === currWeek()) {
     // Checks if they're doubly stupid and asked for a list too
-    if (cat == "list") {
+    if (cat === "list") {
       return replyToCommand(message, "Available categories: `" + Object.keys(cache.boards).join("`, `") + "`");
     } else {
       msg = "!LB get " + cat;
@@ -956,7 +956,7 @@ function displayArchive(message, msg) {
     return replyToCommand(message, "This week is in the future!");
   }
   // Checks if the user just wants a list of the categories
-  if (cat == "list") {
+  if (cat === "list") {
     return replyToCommand(message, `Week ${week} categories: \`${Object.keys(cache.archive.boards[week]).join("`, `")}\``);
   }
 
@@ -992,7 +992,7 @@ function displayArchive(message, msg) {
   for (let i = 0; i < runs.length; i++) {
 
     // Tied runs just decrement an offset used for displaying the placement.
-    if (i > 0 && runs[i].time == runs[i - 1].time) offset--;
+    if (i > 0 && runs[i].time === runs[i - 1].time) offset--;
 
     // On a co-op leaderboard, the comment includes the partner's username.
     if (runs.coop) {
@@ -1011,7 +1011,7 @@ function displayArchive(message, msg) {
     if (links) {
       const links = cache.archive.videos[week];
       for (let j = links.length - 1; j >= 0; j--) {
-        if (links[j].cat == cat && links[j].name == runs[i].name) {
+        if (links[j].cat === cat && links[j].name === runs[i].name) {
           fieldValue += ` - ${links[j].link}`;
           break;
         }
@@ -1099,13 +1099,13 @@ client.on("message", (message) => {
         var cat = args[2].toLowerCase().replace(/\//g, "");
         var time = stringToMillis(args[3]);
       } catch (e) {
-        if (cat == "lp") return replyToCommand(message, "Command usage: `!LB add <category> <time> <portals> [comment]`");
+        if (cat === "lp") return replyToCommand(message, "Command usage: `!LB add <category> <time> <portals> [comment]`");
         else return replyToCommand(message, "Command usage: `!LB add <category> <time> [comment]`");
       }
       if (cache.boards[cat].coop && typeof cache.partner[cat][message.author.id] == "undefined") {
         return replyToCommand(message, "You cannot submit a time without a partner!\nUse `!LB team <@partner>` to send an invite.");
       }
-      if (cat == "lp") {
+      if (cat === "lp") {
         var portals = parseFloat(args[4].replace(/:/g, "."), 10);
         if (isNaN(portals)) return replyToCommand(message, "Please specify your portal count right after the time.");
         if (!Number.isInteger(portals) || portals > time / 0.2) return replyToCommand(message, "Command usage: `!LB add <category> <time> <portals> [comment]`");
@@ -1114,7 +1114,7 @@ client.on("message", (message) => {
       try {
         var comment = "";
         for (var i = 4; i < args.length; i++) {
-          if (i != 4) comment += " ";
+          if (i !== 4) comment += " ";
           comment += args[i];
         }
       } catch (e) {
@@ -1217,7 +1217,7 @@ client.on("message", (message) => {
         replyToCommand(message, "The specified category doesn't exist!");
         return;
       }
-      if (cat == "lp") {
+      if (cat === "lp") {
         var portals = parseFloat(args[3].replace(/:/g, "."), 10);
         if (isNaN(portals)) return replyToCommand(message, "Please specify your portal count right after the time.");
         if (!Number.isInteger(portals) || portals > time / 0.2) return replyToCommand(message, "Command usage: `!LB edit LP <portals> [comment]`");
@@ -1403,7 +1403,7 @@ client.on("message", (message) => {
               return console.log(err);
             }
             // Reloads the cache when done creating categories
-            if (i == newCats.length - 1) loadCache();
+            if (i === newCats.length - 1) loadCache();
           });
         }
       });
@@ -1458,8 +1458,8 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
         try {
           var cat = args[2].toLowerCase();
           if (!cache.boards[cat]) return replyToCommand(message, "The specified category doesn't exist!");
-          if (args[3].toLowerCase() == "coop") cache.boards[cat].coop = true;
-          if (args[3].toLowerCase() == "solo") cache.boards[cat].coop = false;
+          if (args[3].toLowerCase() === "coop") cache.boards[cat].coop = true;
+          if (args[3].toLowerCase() === "solo") cache.boards[cat].coop = false;
           replyToCommand(message, "Switched leaderboard to `" + args[3] + "` mode!");
         } catch (e) {
           return replyToCommand(message, "Command usage: `!LB mode <category> <solo/coop>`");
@@ -1481,8 +1481,8 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
       if (!cache.boards[cat]) return replyToCommand(message, "The specified category doesn't exist!");
       if (!cache.boards[cat].coop) return replyToCommand(message, "This is not a co-op category!");
       if (typeof cache.partner[cat][message.author.id] !== "undefined") return replyToCommand(message, "You already have a partner!");
-      if (partner == message.author) return replyToCommand(message, "You cannot invite yourself!");
-      if (partner.id == "854461353829204020" || partner.id == "925145694069731338") return replyToCommand(message, "You cannot invite a bot!");
+      if (partner === message.author) return replyToCommand(message, "You cannot invite yourself!");
+      if (partner.id === "854461353829204020" || partner.id === "925145694069731338") return replyToCommand(message, "You cannot invite a bot!");
 
       fs.access(`${config.fsPartners}/${cat}`, function(err) {
         if (err) {
@@ -1504,7 +1504,7 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
             }
             replyToCommand(message, "Invite sent! Tell your partner to invite you back.");
           });
-        } else if (team == message.author.id + "i") {
+        } else if (team === message.author.id + "i") {
           fs.writeFile(`${config.fsPartners}/${cat}/${message.author.id}`, partner.id, "utf8", function(err) {
             if (err) return replyToCommand(message, "An error occurred while saving your partner!");
             fs.writeFile(`${config.fsPartners}/${cat}/${partner.id}`, message.author.id, "utf8", function(err) {
@@ -1530,7 +1530,7 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
       }
 
       fs.readFile(`${config.fsPartners}/${cat}/${message.author.id}`, "utf8", function(err, team) {
-        if (!err && team[team.length - 1] == "i") {
+        if (!err && team[team.length - 1] === "i") {
           fs.unlink(`${config.fsPartners}/${cat}/${message.author.id}`, function(delerr) {
             if (delerr) return replyToCommand(message, "Failed to cancel invite!");
             return replyToCommand(message, "Invite cancelled!");
@@ -1558,7 +1558,7 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
 
         try {
           for (var i = 0; i < items.length; i++) {
-            if (command == items[i]) {
+            if (command === items[i]) {
               command = "get";
               displayLeaderboard(message, "!lb get " + items[i]);
               return;
@@ -1569,7 +1569,7 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
             var catNumSum = 0;
             for (var j = 0; j < command.length; j++) comNumSum += command.charCodeAt(j);
             for (var j = 0; j < items[i].length; j++) catNumSum += items[i].charCodeAt(j);
-            if (Math.abs(comNumSum - catNumSum) == 1) {
+            if (Math.abs(comNumSum - catNumSum) === 1) {
               replyToCommand(message, "Did you mean `!LB get " + items[i] + "`?");
               return;
             }
