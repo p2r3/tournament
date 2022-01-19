@@ -20,8 +20,9 @@ const client = new Discord.Client({
 
 client.once("ready", () => {
 
-  console.log("Logged in!");
+  client.user.setActivity("Portal 2");
   loadCache();
+  console.log("Ready");
 
 });
 
@@ -1593,4 +1594,4 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
 
 });
 
-client.login(tokens.discord);
+client.login(tokens.discord).then(() => console.log("Logged in!"));
