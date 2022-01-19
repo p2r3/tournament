@@ -444,7 +444,7 @@ function submitTime(message, runData) {
     note: note
   });
   saveBoard(message, cat);
-  client.channels.cache.get(config.channel).send("<@" + message.author + "> Your time has been added: `" + millisToString(time) + "`. Category: `" + cat + "`");
+  client.channels.cache.get(config.channel).send(`${message.author} Your time has been added: \`${millisToString(time)}\`. Category: \`${cat}\``);
   cache.submit[message.author] = undefined;
 
 }
@@ -466,7 +466,7 @@ function verifyDemo(message, runData) {
           for (const adminId in config.admin) {
             try {
               client.users.fetch(adminId).then((admin) => {
-                admin.send("Player `" + getName(message.author) + "` attempted to submit a run on `" + mapString + ".bsp`!");
+                admin.send(`Player \`${getName(message.author)}\` attempted to submit a run on \`${mapString}.bsp\`!`);
               });
             } catch (e) {
               console.log(`${getName(message.author)} maperror ${mapString}!=${config.map.file}`);
@@ -879,10 +879,10 @@ function displayLeaderboard(message, msg) {
   // It's defined before the loop so the board can get split up if needed.
   const embed = {
     color: 0xfaa81a,
-    title: "Leaderboard for category \"" + cat + "\"",
+    title: `Leaderboard for category "${cat}"`,
     fields: [],
     footer: {
-      text: "Week " + currWeek() + " / " + runs.length + " runs / " + Math.round((slowest - fastest) / 1000) + " second difference"
+      text: `Week ${currWeek()} / ${runs.length} runs / ${Math.round((slowest - fastest) / 1000)} second difference`
     }
   };
 
@@ -992,10 +992,10 @@ function displayArchive(message, msg) {
   // It's defined before the loop so the board can get split up if needed.
   const embed = {
     color: 0x00ff7c,
-    title: "Archive for category \"" + cat + "\"",
+    title: `Leaderboard for category "${cat}"`,
     fields: [],
     footer: {
-      text: "Week " + week + " / " + runs.length + " runs / " + Math.round((slowest - fastest) / 1000) + " second difference"
+      text: `Week ${week} / ${runs.length} runs / ${Math.round((slowest - fastest) / 1000)} second difference`
     }
   };
 
