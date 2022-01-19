@@ -110,8 +110,7 @@ function loadCache() {
           };
         }
         // Last line sets leaderboard mode (either SOLO or COOP)
-        if (currBoard[currBoard.length - 1] === "COOP") cache.boards[boards[i]].coop = true;
-        else cache.boards[boards[i]].coop = false;
+        cache.boards[boards[i]].coop = currBoard[currBoard.length - 1] === "COOP";
       });
     }
   });
@@ -150,8 +149,7 @@ function loadCache() {
           }
           // Last line sets leaderboard mode (either SOLO or COOP)
           // Most likely not set for earlier weeks. Defaults to SOLO.
-          if (currBoard[currBoard.length - 1] === "COOP") cache.archive.boards[week][boards[i]].coop = true;
-          else cache.archive.boards[week][boards[i]].coop = false;
+          cache.archive.boards[week][boards[i]].coop = currBoard[currBoard.length - 1] === "COOP";
         });
       }
     });
@@ -433,7 +431,6 @@ function submitTime(message, runData) {
   saveBoard(message, cat);
   client.channels.cache.get(config.channel).send("<@" + message.author + "> Your time has been added: `" + millisToString(time) + "`. Category: `" + cat + "`");
   cache.submit[message.author] = undefined;
-  return;
 
 }
 
@@ -485,7 +482,6 @@ function verifyDemo(message, runData) {
         }
 
         request.destroy();
-        return;
       }
 
     });
@@ -1516,7 +1512,6 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
           });
         } else {
           replyToCommand(message, "The player you invited already has a partner in this category.");
-          return;
         }
       });
 
@@ -1537,7 +1532,6 @@ If you run into any issues, don't be afraid to ask help from a moderator. Robots
           });
         } else {
           replyToCommand(message, "You don't have an active invite in this category.");
-          return;
         }
       });
       break;
