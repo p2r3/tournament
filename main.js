@@ -2,7 +2,6 @@ const fs = require("fs");
 const https = require("https");
 const { exec } = require("child_process");
 const Discord = require("discord.js");
-const discordReply = require("discord-reply")
 const superagent = require("superagent");
 const ytdl = require('ytdl-core');
 
