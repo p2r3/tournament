@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@ytdl/ytdl": "^1.4.16",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.6.0",
     "superagent": "^6.1.0",
     "ytdl-core": "^4.9.2"
   }

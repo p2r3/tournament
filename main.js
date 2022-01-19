@@ -5,7 +5,18 @@ const Discord = require("discord.js");
 const superagent = require("superagent");
 const ytdl = require('ytdl-core');
 
-const client = new Discord.Client();
+// Create the bot client and give it the proper intents.
+// Since Discord API v9 (discord.js v13), bots are required to declare which partials and privileged intents they use
+const client = new Discord.Client({
+  partials: [
+    "CHANNEL" // This is needed to be able to cache DMs
+  ],
+  intents: [
+    Discord.Intents.FLAGS.GUILDS, // Access to guilds (servers)
+    Discord.Intents.FLAGS.GUILD_MESSAGES, // Access to guild messages
+    Discord.Intents.FLAGS.DIRECT_MESSAGES // Access to DMs
+  ]
+});
 
 client.once("ready", () => {
 
@@ -303,8 +314,11 @@ function removeBoard(message, cat) {
 // A bunch of small functions for handling specific common tasks
 function replyToCommand(message, reply) {
 
-  if (!message.guild || message.channel.id === config.channel) return message.lineReplyNoMention(reply);
-  return client.channels.cache.get(config.channel).send(`<@${message.author}> ${reply}`);
+  // After discord.js v13, you can reply to a message without mentioning the user natively within the library itself
+  // This means we no longer need the discord-reply, and can therefore reduce the application size
+  // To do this, we deny user mentioning in allowedMentions in the MessagePayload
+  if (!message.guild || message.channel.id === config.channel) return message.reply({ content: reply, allowedMentions: { repliedUser: false } });
+  return client.channels.cache.get(config.channel).send(`${message.author} ${reply}`);
 
 }
 
@@ -1040,7 +1054,8 @@ function displayArchive(message, msg) {
 }
 
 // Handling user commands
-client.on("message", (message) => {
+// the 'message' event is deprecated as of discord.js v13, use 'messageCreate' instead
+client.on("messageCreate", message => {
 
   if (message.author.bot) return;
 
@@ -1339,8 +1354,8 @@ client.on("message", (message) => {
       break;
     case "export":
 
-      if (!config.admin[message.author.id]) return replyToCommand("Insufficient permissions!");
-      if (message.guild !== null) return replyToCommand("This command only works in DMs!");
+      if (!config.admin[message.author.id]) return replyToCommand(message, "Insufficient permissions!");
+      if (message.guild !== null) return replyToCommand(message, "This command only works in DMs!");
       exportRuns(message);
       exportIntro(message);
       break;
