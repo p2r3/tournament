@@ -1179,6 +1179,7 @@ client.on("messageCreate", message => {
     case "list":
     case "categories":
     case "cats":
+    case "dogs":
 
       replyToCommand(message, `Available categories: \`${Object.keys(cache.boards).join("`, `")}\``);
       break;
