@@ -966,9 +966,9 @@ function displayArchive(message, msg) {
       return displayLeaderboard(message, msg);
     }
   }
-  // Checks if they're trying to be annoying by specifying a week in the future
-  if (week > currWeek()) {
-    return replyToCommand(message, "This week is in the future!");
+  // Checks if the archive doesn't exist yet or is in the future
+  if (typeof cache.archive.boards[week] === "undefined") {
+    return replyToCommand(message, "This archive doesn't exist yet!");
   }
   // Checks if the user just wants a list of the categories
   if (cat === "list") {
