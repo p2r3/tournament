@@ -238,7 +238,7 @@ function removeRun(message, cat, player) {
       return;
     }
   }
-  replyToCommand(message, "Player " + getName(player) + " doesn't have a run in this category.");
+  replyToCommand(message, `Player ${getName(player)} doesn't have a run in this category.`);
 
 }
 
@@ -246,13 +246,17 @@ function editRun(message, cat, player, note) {
 
   for (let i = 0; i < cache.boards[cat].length; i++) {
     if (cache.boards[cat][i].id === player.id) {
+      if(cache.boards[cat].coop) {
+        const partner = cache.partner[cat][player.id];
+        note += "~COOP:" + GetName(partner);
+      }
       cache.boards[cat][i].note = note;
       saveBoard(message, cat);
       replyToCommand(message, "Run has been updated!");
       return;
     }
   }
-  replyToCommand(message, "Player " + getName(player) + " doesn't have a run in this category.");
+  replyToCommand(message, `Player ${getName(player)} doesn't have a run in this category.`);
 
 }
 
@@ -946,7 +950,7 @@ function displayArchive(message, msg) {
     if (msg.split(" ")[4] === "links") var links = true;
     else var links = false;
     if (isNaN(week)) throw 0;
-    if (typeof cat != "undefined") cat = cat.toLowerCase();
+    if (typeof cat !== "undefined") cat = cat.toLowerCase();
     else cat = "list";
   } catch (e) {
     return replyToCommand(message, "Command usage: `!LB archive <week> <category> [links]`");
@@ -1114,6 +1118,16 @@ client.on("messageCreate", message => {
         if (cat === "lp") return replyToCommand(message, "Command usage: `!LB add <category> <time> <portals> [comment]`");
         else return replyToCommand(message, "Command usage: `!LB add <category> <time> [comment]`");
       }
+
+      if (isNaN(time)) {
+        replyToCommand(message, "Invalid time format!");
+        return;
+      }
+      if (!cache.boards[cat]) {
+        replyToCommand(message, "The specified category doesn't exist!");
+        return;
+      }
+
       if (cache.boards[cat].coop && typeof cache.partner[cat][message.author.id] == "undefined") {
         return replyToCommand(message, "You cannot submit a time without a partner!\nUse `!LB team <@partner>` to send an invite.");
       }
@@ -1149,15 +1163,6 @@ client.on("messageCreate", message => {
       } catch (e) {
         console.log(e);
         replyToCommand(message, "An error occurred while checking your comment. Please don't overuse special characters.");
-        return;
-      }
-
-      if (isNaN(time)) {
-        replyToCommand(message, "Invalid time format!");
-        return;
-      }
-      if (!cache.boards[cat]) {
-        replyToCommand(message, "The specified category doesn't exist!");
         return;
       }
 
